@@ -7,7 +7,7 @@ import random
 
 # global variables
 image_of_grass_texture = r".\snake\pics\grass_2.jpg"
-snake_font = r"C:\Users\Hpkate\PycharmProjects\Snake\snake\SnakeHoliday-vmYXD.otf"
+snake_font = r".\SnakeHoliday-vmYXD.otf"
 
 
 class Snake:
