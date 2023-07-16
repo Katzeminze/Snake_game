@@ -5,9 +5,12 @@ import time
 import random
 
 
-# global variables
-image_of_grass_texture = r".\snake\pics\grass_2.jpg"
-snake_font = r".\SnakeHoliday-vmYXD.otf"
+# global variables of text and texture paths
+image_of_grass_texture = r".\Snake_game\snake\pics\grass_2.jpg"
+snake_font = r".\Snake_game\snake\SnakeHoliday-vmYXD.otf"
+snake_skin = r".\Snake_game\snake\pics\green_snake_skin.jpg"
+apple = r".\Snake_game\snake\pics\apple.png"
+orange = r".\Snake_game\snake\pics\orange.png"
 
 
 class Snake:
@@ -42,6 +45,10 @@ class Snake:
         self.food_x = round(random.randrange(0, self.width - self.snake_part) / 10.0) * 10.0
         self.food_y = round(random.randrange(0, self.height - self.snake_part) / 10.0) * 10.0
 
+        # Fruit type
+        self.fruits = [apple, orange]
+        self.fruit_number = 0
+
     def start(self):
         pygame.init()
         pygame.font.init()
@@ -68,7 +75,15 @@ class Snake:
             # pygame.display.update()
 
             # draw food
-            pygame.draw.rect(self.dis, self.red, [self.food_x, self.food_y, self.snake_part, self.snake_part])
+
+            random_fruit = self.fruits[self.fruit_number]
+            fruit = pygame.image.load(random_fruit)
+            fruit = pygame.transform.scale(fruit, (10, 10))
+            rect = fruit.get_rect()
+            rect = rect.move((self.food_x, self.food_y))
+            self.dis.blit(fruit, rect)
+
+            #pygame.draw.rect(self.dis, self.red, [self.food_x, self.food_y, self.snake_part, self.snake_part])
             # draw snake
             pygame.draw.rect(self.dis, self.blue, [self.x, self.y, self.snake_part, self.snake_part])
 
@@ -91,6 +106,7 @@ class Snake:
                 self.food_x = round(random.randrange(0, self.width - self.snake_part) / 10.0) * 10.0
                 self.food_y = round(random.randrange(0, self.height - self.snake_part) / 10.0) * 10.0
                 self.snake_length += 1
+                self.fruit_number = random.randrange(len(self.fruits))
             clock.tick(self.snake_speed)
 
         self.exit()
