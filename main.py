@@ -1,16 +1,16 @@
-"""Simple Snake Game"""
+"""
+    Simple Snake Game
+  created by Katzeminze.
+"""
 
 import pygame
 import time
 import random
+from xml.dom import minidom
 
 
 # global variables of text and texture paths
-image_of_grass_texture = r".\Snake_game\snake\pics\grass_2.jpg"
-snake_font = r".\Snake_game\snake\SnakeHoliday-vmYXD.otf"
-snake_skin = r".\Snake_game\snake\pics\green_snake_skin.jpg"
-apple = r".\Snake_game\snake\pics\apple.png"
-orange = r".\Snake_game\snake\pics\orange.png"
+images = dict()
 
 
 class Snake:
@@ -36,24 +36,33 @@ class Snake:
         self.y_step = 0
 
         self.snake_part = 10
+        self.food_part = 10
         self.snake_speed = 10
 
         self.snake_list = []
         self.snake_length = 1
 
         # Position of the food
-        self.food_x = round(random.randrange(0, self.width - self.snake_part) / 10.0) * 10.0
-        self.food_y = round(random.randrange(0, self.height - self.snake_part) / 10.0) * 10.0
+        self.food_x = round(random.randrange(0, self.width - self.food_part) / 10.0) * 10.0
+        self.food_y = round(random.randrange(0, self.height - self.food_part) / 10.0) * 10.0
 
         # Fruit type
-        self.fruits = [apple, orange]
-        self.fruit_number = 0
+        try:
+            self.fruits = [images["apple"], images["orange"]]
+            self.fruit_number = 0
+        except KeyError as err:
+            print(f"Key {err} is missed in images dictionary")
+            raise
 
     def start(self):
         pygame.init()
         pygame.font.init()
         self.dis = pygame.display.set_mode((self.width, self.height))
-        self.font_style = pygame.font.Font(snake_font, 50)
+        try:
+            self.font_style = pygame.font.Font(images["snake_font"], 50)
+        except KeyError as err:
+            print(f"Key {err} is missed in images dictionary")
+            raise
         pygame.display.update()
         pygame.display.set_caption('Snake')
 
@@ -70,12 +79,15 @@ class Snake:
 
             # self.dis.fill(self.white)
             # self.texture_snake = pygame.image.load(r".\snake\pics\green_snake_skin.jpg")  # .convert()
-            texture_grass = self.create_texture(self.width, self.height, image_of_grass_texture)
-            self.dis.blit(texture_grass, (0, 0))
+            try:
+                texture_grass = self.create_texture(self.width, self.height, images["image_of_grass_texture"])
+                self.dis.blit(texture_grass, (0, 0))
+            except KeyError as err:
+                print(f"Key {err} is missed in images dictionary")
+                raise
             # pygame.display.update()
 
             # draw food
-
             random_fruit = self.fruits[self.fruit_number]
             fruit = pygame.image.load(random_fruit)
             fruit = pygame.transform.scale(fruit, (10, 10))
@@ -85,6 +97,7 @@ class Snake:
 
             #pygame.draw.rect(self.dis, self.red, [self.food_x, self.food_y, self.snake_part, self.snake_part])
             # draw snake
+            #pygame.draw.circle(self.dis, self.blue, [self.x, self.y], self.snake_part)
             pygame.draw.rect(self.dis, self.blue, [self.x, self.y, self.snake_part, self.snake_part])
 
             snake_head = [self.x, self.y]
@@ -103,8 +116,8 @@ class Snake:
             pygame.display.update()
 
             if self.x == self.food_x and self.y == self.food_y:
-                self.food_x = round(random.randrange(0, self.width - self.snake_part) / 10.0) * 10.0
-                self.food_y = round(random.randrange(0, self.height - self.snake_part) / 10.0) * 10.0
+                self.food_x = round(random.randrange(0, self.width - self.food_part) / 10.0) * 10.0
+                self.food_y = round(random.randrange(0, self.height - self.food_part) / 10.0) * 10.0
                 self.snake_length += 1
                 self.fruit_number = random.randrange(len(self.fruits))
             clock.tick(self.snake_speed)
@@ -144,7 +157,16 @@ class Snake:
 
     def snake_extension(self):
         for x in self.snake_list:
-            pygame.draw.rect(self.dis, self.yellow, [x[0], x[1], self.snake_part, self.snake_part])
+            # pygame.draw.rect(self.dis, self.yellow, [x[0], x[1], self.snake_part, self.snake_part])
+            try:
+                skin = pygame.image.load(images["snake_skin"])
+            except KeyError as err:
+                print(f"Key {err} is missed in images dictionary")
+                raise
+            skin = pygame.transform.scale(skin, (10, 10))
+            rect_skin = skin.get_rect()
+            rect_skin = rect_skin.move((x[0], x[1]))
+            self.dis.blit(skin, rect_skin)
 
     def game_over_operation(self, msg, sleep_period=2):
         self.display_message(msg, self.red)
@@ -165,6 +187,14 @@ class Snake:
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    # reading xml files with textures and fonts
+    xml_filename = r"C:\Users\Hpkate\PycharmProjects\Snake_game\images_list.xml"
+    xmldoc = minidom.parse(xml_filename)
+    itemlist = xmldoc.getElementsByTagName('image')
+    for item in itemlist:
+        images[item.attributes["tag"].value] = item.attributes["file"].value
+
+    # starting the game
     cobra = Snake()
     cobra.start()
 
