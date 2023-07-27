@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <imagelist>
-  <image tag="image_of_grass_texture" file="Snake_game/snake/pics/grass_2.jpg"/>
-  <image tag="snake_font" file="Snake_game/snake/SnakeHoliday-vmYXD.otf"/>
-  <image tag="snake_skin" file="Snake_game/snake/pics/brown_snake_skin.jpg"/>
-  <image tag="apple" file="Snake_game/snake/pics/apple.png"/>
-  <image tag="orange" file="Snake_game/snake/pics/orange.png"/>
+  <image tag="image_of_grass_texture" file="snake/pics/grass_2.jpg"/>
+  <image tag="snake_font" file="snake/SnakeHoliday-vmYXD.otf"/>
+  <image tag="snake_skin" file="snake/pics/brown_snake_skin.jpg"/>
+  <image tag="apple" file="snake/pics/apple.png"/>
+  <image tag="orange" file="snake/pics/orange.png"/>
 </imagelist>

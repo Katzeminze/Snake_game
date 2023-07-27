@@ -6,6 +6,7 @@
 import pygame
 import time
 import random
+import os
 from xml.dom import minidom
 
 
@@ -95,9 +96,8 @@ class Snake:
             rect = rect.move((self.food_x, self.food_y))
             self.dis.blit(fruit, rect)
 
-            #pygame.draw.rect(self.dis, self.red, [self.food_x, self.food_y, self.snake_part, self.snake_part])
+            # pygame.draw.rect(self.dis, self.red, [self.food_x, self.food_y, self.snake_part, self.snake_part])
             # draw snake
-            #pygame.draw.circle(self.dis, self.blue, [self.x, self.y], self.snake_part)
             pygame.draw.rect(self.dis, self.blue, [self.x, self.y, self.snake_part, self.snake_part])
 
             snake_head = [self.x, self.y]
@@ -188,13 +188,13 @@ class Snake:
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     # reading xml files with textures and fonts
-    xml_filename = r"C:\Users\Hpkate\PycharmProjects\Snake_game\images_list.xml"
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    xml_filename = dir_path + r"\images_list.xml"
     xmldoc = minidom.parse(xml_filename)
     itemlist = xmldoc.getElementsByTagName('image')
     for item in itemlist:
-        images[item.attributes["tag"].value] = item.attributes["file"].value
+        images[item.attributes["tag"].value] = dir_path + "/" + item.attributes["file"].value
 
     # starting the game
     cobra = Snake()
     cobra.start()
-
